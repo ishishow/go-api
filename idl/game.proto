@@ -1,0 +1,22 @@
+syntax = "proto3";
+package user;
+option go_package = ".;rpc";
+
+import "google/api/annotations.proto";
+
+service GameService {
+    rpc GameFinish(GameFinishRequest) returns (GameFinishResponse) {
+        option (google.api.http) = {
+            post: "/game/finish"
+            body: "*"
+        };
+    }
+}
+
+message GameFinishRequest {
+    int32 score = 1;
+}
+
+message GameFinishResponse {
+    int32 coin = 1;
+}

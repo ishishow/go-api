@@ -1,0 +1,78 @@
+version: "3"
+
+services:
+  redis:
+    image: redis:5.0
+    ports:
+      - 6379:6379
+
+  mysql:
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
+      - db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "ca-tech-dojo"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: "ca-tech-dojo"
+    links:
+      - mysql
+    ports:
+      - 4000:80
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui:latest
+    environment:
+      SWAGGER_JSON: /api/api-document.yaml
+    volumes:
+      - ./api-document.yaml:/api/api-document.yaml:ro
+    ports:
+      - 127.0.0.1:3001:8080
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus/
+    ports:
+      - 127.0.0.1:9090:9090
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3000:3000
+    env_file:
+      - ./grafana.env
+
+  alertmanager:
+    image: prom/alertmanager
+    container_name: alertmanager
+    volumes:
+      - ./alertmanager:/etc/alertmanager
+    command: "--config.file=/etc/alertmanager/config.yaml"
+    ports:
+      - 9093:9093
+    restart: always
+
+  envoy:
+    image: envoyproxy/envoy:v1.13.1
+    volumes:
+      - "./envoy:/etc/envoy"
+    expose:
+      - 51051
+    ports:
+      - 51051:51051
+
+volumes:
+  db-data:
+    driver: local

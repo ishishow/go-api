@@ -1,0 +1,27 @@
+syntax = "proto3";
+package user;
+option go_package = ".;rpc";
+
+import "google/api/annotations.proto";
+
+service CollectionService {
+    rpc CollectionList(CollectionListRequest) returns (CollectionListResponse) {
+        option (google.api.http) = {
+            get: "/collection/list"
+        };
+    }
+}
+
+message Collection {
+    string collection_id = 1;
+    string name = 2;
+    int32 rarity = 3;
+    bool has_item = 4;
+}
+
+message CollectionListRequest {}
+
+message CollectionListResponse {
+    repeated Collection collections = 1;
+}
+

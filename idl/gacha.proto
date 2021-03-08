@@ -1,0 +1,29 @@
+syntax = "proto3";
+package user;
+option go_package = ".;rpc";
+
+import "google/api/annotations.proto";
+
+service GachaService {
+    rpc GachaDraw(GachaDrawRequest) returns (GachaDrawResponse) {
+        option (google.api.http) = {
+            post: "/gacha/draw"
+            body: "*"
+        };
+    }
+}
+
+message Result {
+    string collection_id = 1;
+    string name = 2;
+    int32 rarity =3;
+    bool is_new = 4;
+}
+
+message GachaDrawRequest {
+    int32 times = 1;
+}
+
+message GachaDrawResponse {
+    repeated Result results = 1;
+}

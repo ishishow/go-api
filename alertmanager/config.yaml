@@ -1,0 +1,9 @@
+route:
+  receiver: "containers_notification"
+receivers:
+  - name: "containers_notification"
+    slack_configs:
+      - api_url: "https://hooks.slack.com/xxxxxxxxxxxxxx"
+        channel: "#general"
+        text: "{{ .CommonAnnotations.summary }}"
+        send_resolved: true

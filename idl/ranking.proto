@@ -1,0 +1,28 @@
+syntax = "proto3";
+package user;
+option go_package = ".;rpc";
+
+import "google/api/annotations.proto";
+
+service RankingService {
+    rpc RankingList(RankingListRequest) returns (RankingListResponse) {
+        option (google.api.http) = {
+            get: "/ranking/list"
+        };
+    }
+}
+
+message Rank {
+    string user_id = 1;
+    string user_name = 2;
+    int32 rank = 3;
+    int32 score = 4;
+}
+
+message RankingListRequest {
+    string start = 1;
+}
+
+message RankingListResponse {
+    repeated Rank ranks = 1;
+}

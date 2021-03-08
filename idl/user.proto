@@ -1,0 +1,58 @@
+syntax = "proto3";
+package user;
+option go_package = ".;rpc";
+
+import "google/api/annotations.proto";
+
+service UserService {
+    rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
+        option (google.api.http) = {
+            post: "/user/create"
+            body: "*"
+        };
+    }
+
+    rpc ReadUser(ReadUserRequest) returns (ReadUserResponse) {
+        option (google.api.http) = {
+            get: "/user/get"
+        };
+    }
+
+    rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+        option (google.api.http) = {
+            post: "/user/update"
+            body: "*"
+        };
+    }
+}
+
+message User {
+    string id = 1;
+    string name = 2;
+    string auth_token = 3;
+    int32 high_score = 4;
+    int32 coin = 5;
+}
+
+message CreateUserRequest {
+    string name = 1;
+}
+
+message CreateUserResponse {
+    string auth_token = 1;
+}
+
+message ReadUserRequest {
+    string id = 1;
+}
+
+message ReadUserResponse {
+    User user = 1;
+}
+
+message UpdateUserRequest {
+    string id = 1;
+    string name = 2;
+}
+
+message UpdateUserResponse {}
